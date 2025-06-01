@@ -1,3 +1,4 @@
+import { IUsersAccountRepository } from "../domain/user.entity";
 import { IUser } from "../infrastructure/model/user.model";
 
 export class UsersAccountUseCase {

@@ -14,7 +14,7 @@ export const init = async () => {
   try {
      await connectDB()
     app.listen(app.get("port"), async () => {
-  console.log(`🚀 Servidor corriendo ${app.get("port")} en ${env.baseUrl}`);
+  console.log(`🚀 Servidor corriendo ${app.get("port")}`);
     const baseUrl = `${env.baseUrl}:${app.get("port")}`;
    if (env.node === "development") {
         console.log(`API is available at ${baseUrl}/api/v1`);
