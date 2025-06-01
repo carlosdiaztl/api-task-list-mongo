@@ -29,7 +29,7 @@ export class TaskController {
   ) => {
     try {
       const Task = await this.TaskUseCase.getTaskById(
-        +id
+        id
       );
       if (!Task) {
         return warning(
@@ -57,7 +57,6 @@ export class TaskController {
   ) => {
     try {
      
-      //const idUserLogged = getIdUserLogged(header);
       const Task = await this.TaskUseCase.createTask(
         body
       );
@@ -73,56 +72,76 @@ export class TaskController {
     }
   };
 
-//   public updateTask = async (
-//     { 
-//       params: { id }, 
-//       body: { userUpdate, userUInstitutions}, 
-//       method,
-//       headers
-//     }: Request,
-//     res: Response
-//   ) => {
-//     try {
-//       const token = headers.authorization?.split(" ")[1];
-//       if (!token) {
-//         throw new Error("Token not found");
-//       }
-//       const Task = await this.TaskUseCase.updateTask(
-//         token,
-//         +id,
-//         userUpdate,
-//         userUInstitutions
-//       );
-//       fromStatusAndCode(res, Task, method);
-//     } catch (error: unknown) {
-//       const errorAsError = error as Error;
-//       return warning(
-//         res,
-//         EErrorMessage.UPDATE_DATA_ERROR,
-//         ECodeHTTPStatus.INTERNAL_SERVER_ERROR,
-//         errorAsError.message
-//       );
-//     }
-//   };
+ // Assuming this is inside TaskController class
+public updateTask = async (req: Request, res: Response): Promise<void> => {
+    try {
+      const taskId = req.params.id;
+      console.log('Taskid:', taskId);
 
-//   public deleteTask = async (
-//     { headers, params: { id }, method }: Request,
-//     res: Response
-//   ) => {
-//     try {
-//       await validateTokenAndRole(headers, [1], this.TaskUseCase);
-//       await this.TaskUseCase.deleteTask(+id);
-//       return res.status(ECodeHTTPStatus.OK).json({
-//         message: "User deleted successfully",
-//       });
-//     } catch (error: unknown) {
-//       const errorAsError = error as Error;
-//       return warning(
-//         res,
-//         EErrorMessage.DELETE_DATA_ERROR,
-//         ECodeHTTPStatus.INTERNAL_SERVER_ERROR,
-//         errorAsError.message
-//       );
-//     }
-//   };
+      // IMPORTANT: Use the correct instance name (lowercase 't' if that's how it's named)
+      const existingTask = await this.TaskUseCase.getTaskById(taskId);
+      console.log('TaskController.updateTask - Task:', existingTask);
+
+      if (!existingTask) {
+        // Use your standardized warning helper for not found
+        return warning(
+          res,
+          EErrorMessage.NOT_FOUND_ERROR,
+          ECodeHTTPStatus.NOT_FOUND,
+          "Task not found"
+        );
+      }
+
+      const updateData = req.body;
+
+      // Ensure that `updateData` has the correct type for `UpdateTaskInput`
+      // You might want to add a validation layer here (e.g., Joi, Zod) to ensure req.body conforms to UpdateTaskInput
+      const input = { id: taskId, ...updateData };
+
+      // Call the use case method
+      const updatedTask = await this.TaskUseCase.updateTask(input);
+
+      // Use only one response sender
+      fromStatusAndCode(res, updatedTask, req.method); // This handles setting status and sending JSON
+
+    } catch (error: any) {
+      console.error('Error in TaskController.updateTask:', error.message);
+      // Use your standardized warning helper for errors
+      return warning(
+        res,
+        EErrorMessage.UPDATE_DATA_ERROR, // Or a more specific error message type if available
+        ECodeHTTPStatus.INTERNAL_SERVER_ERROR, // Or a more specific HTTP status if the error message implies it (e.g., 400 for validation errors)
+        error.message
+      );
+    }
+  }
+ public deleteTask = async (
+    { params: { id }, method }: Request,
+    res: Response
+  ) => {
+    try {
+      const Task = await this.TaskUseCase.deleteTask(
+        id
+      );
+      if (!Task) {
+        return warning(
+          res,
+          EErrorMessage.NOT_FOUND_ERROR,
+          ECodeHTTPStatus.NOT_FOUND,
+          "Task not found"
+        );
+      }
+      
+      return fromStatusAndCode(res, Task, method)
+    } catch (error: unknown) {
+      const errorAsError = error as Error;
+      return warning(
+        res,
+        EErrorMessage.DELETE_DATA_ERROR,
+        ECodeHTTPStatus.INTERNAL_SERVER_ERROR,
+        errorAsError.message
+      );
+    }
+  };
+
 }

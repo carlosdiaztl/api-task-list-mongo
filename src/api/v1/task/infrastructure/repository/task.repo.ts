@@ -9,16 +9,20 @@ export class TaskRepository implements ITaskRepository {
     async findAll(): Promise<ITask[]> {
     return await TaskModel.find();
   }
-    findById(id: number): Promise<ITask | null> {
+    findById(id: string): Promise<ITask | null> {
         return TaskModel.findById(id);
     }
     create (taskData: ITask): Promise<ITask> {
         return TaskModel.create(taskData);
     }
-    updated(id: number, taskData: ITask): Promise<ITask | null> {
-        throw new Error("Method not implemented.");
-    }
-    delete(id: number): Promise<number | null> {
-        throw new Error("Method not implemented.");
+    async updated(id: string, updates: Partial<ITask>): Promise<ITask | null> { // <-- Aquí el cambio importante
+    // findByIdAndUpdate encuentra un documento por su _id y lo actualiza.
+    // { new: true } asegura que el documento devuelto sea el actualizado, no el original.
+    // También puedes añadir { runValidators: true } si quieres que las validaciones del esquema de Mongoose se ejecuten en las actualizaciones.
+    return await TaskModel.findByIdAndUpdate(id, updates, { new: true }).exec();
+  }
+    async delete(id: string): Promise<boolean> {
+        const result = await TaskModel.deleteOne({ _id: id }).exec();
+         return result.deletedCount === 1;
     }
 }
