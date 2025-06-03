@@ -10,8 +10,8 @@ const app = express();
 app.set("port", env.port);
 app.use(cors(corsOptions));
 app.use(express.json());
-app.use("/api/v1", cors(corsOptions), routes);
 app.use("/docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+app.use("/api/v1", cors(corsOptions), routes);
 export const init = async () => {
   try {
      await connectDB()
