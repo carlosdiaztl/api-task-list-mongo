@@ -1,6 +1,5 @@
-// src/db/connection.ts (o la nueva ruta de tu archivo de conexión a la DB)
 import mongoose from 'mongoose';
-import { env } from './app/config/config'; // <--- AJUSTA ESTA RUTA si config.ts no está en un nivel superior
+import { env } from '../app/config/config'; // <--- AJUSTA ESTA RUTA si config.ts no está en un nivel superior
 
 // Método para conectar a MongoDB
 export const connectDB = async () => {
@@ -32,4 +31,3 @@ mongoose.connection.on('disconnected', () => {
 mongoose.connection.on('error', (err) => {
   console.error(`MongoDB connection error: ${err}`);
 });
-connectDB();
