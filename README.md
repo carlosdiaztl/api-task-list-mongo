@@ -5,10 +5,10 @@ This API provides a robust solution for managing tasks, allowing users to perfor
 Live API & Documentation
 The API is deployed and accessible at the following base URL:
 
-Base URL: https://api-task-list-mongo-7sxj.vercel.app
+Base URL: https://api-task-list-mongo.vercel.app
 You can explore the API endpoints and test them directly using the integrated Swagger UI documentation:
 
-API Documentation (Swagger UI): https://api-task-list-mongo-7sxj.vercel.app/doc
+API Documentation (Swagger UI): https://api-task-list-mongo.vercel.app/doc
 API Base Path
 All API endpoints are prefixed with the following version path:
 
