@@ -23,8 +23,8 @@ const swaggerDefinition: any = {
       url: `${process.env.SWAGGER_SERVER_CLOUD}/api/v1`,
       description: "Cloud server",
     },
-  ],
-//   components: {
+  ]
+//   ,components: {
 //     securitySchemes: {
 //       ApiKeyAuth: {
 //         type: "apiKey",

@@ -1,16 +1,21 @@
 import express from "express";
+import path from 'path';
 import cors from "cors";
 import { corsOptions } from './utils/cors';
 import routes from '../api/routes';
 import { env } from './config/config';
 import { connectDB } from "../database.config";
-import { swaggerSpec, swaggerUi } from "./swagger";
+import swaggerUi from 'swagger-ui-express';
+import swaggerJsdoc from 'swagger-jsdoc';
+import { swaggerSpec } from "./swagger";
+// ... tus otras importaciones (cors, routes, etc.)
 
 const app = express();
+const swaggerUiPath = path.join(__dirname, '../node_modules/swagger-ui-dist');
 app.set("port", env.port);
 app.use(cors(corsOptions));
 app.use(express.json());
-app.use("/docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+app.use("/docs", express.static(swaggerUiPath), swaggerUi.setup(swaggerSpec))
 app.use("/api/v1", cors(corsOptions), routes);
 export const init = async () => {
   try {
