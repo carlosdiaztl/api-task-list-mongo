@@ -12,10 +12,28 @@ import { swaggerSpec } from "./swagger";
 
 const app = express();
 const swaggerUiPath = path.join(__dirname, '../node_modules/swagger-ui-dist');
+const swaggerDistPath = path.join(path.dirname(require.resolve('swagger-ui-dist/package.json')), 'dist');
+console.log('DEBUG: Swagger UI Dist Path:', swaggerDistPath); // Útil para depurar en los logs de Vercel
 app.set("port", env.port);
 app.use(cors(corsOptions));
 app.use(express.json());
-app.use("/docs", express.static(swaggerUiPath), swaggerUi.setup(swaggerSpec))
+if (env.node === "production" || env.node === "qa") {
+ app.use("/docs", express.static(swaggerDistPath));
+
+// 2. Luego, usa swaggerUi.setup para configurar la interfaz de usuario con tu especificación.
+//    Este middleware debe ir después del que sirve los archivos estáticos.
+app.use("/docs", swaggerUi.setup(swaggerSpec, {
+    // Puedes añadir opciones adicionales de Swagger UI aquí si las necesitas.
+    // Por ejemplo:
+    explorer: true, // Habilita la barra de búsqueda en Swagger UI
+    // customCssUrl: '/docs/swagger-ui.css', // Si tienes CSS personalizado y lo sirves en /docs
+    // customJsUrl: '/docs/swagger-ui-bundle.js', // Si tienes JS personalizado y lo sirves en /docs
+}));
+;
+}else{
+
+  app.use("/docs", express.static(swaggerUiPath), swaggerUi.setup(swaggerSpec))
+}
 app.use("/api/v1", cors(corsOptions), routes);
 export const init = async () => {
   try {
