@@ -5,10 +5,11 @@
   "scripts": {
     "test": "jest",
     "dev": "nodemon -r dotenv/config -r ./src/index.ts",
+    "start": "ts-node -r dotenv/config -r ./src/index.ts",
     "docker": "docker-test.bat"
   },
   "keywords": [],
-  "author": "",
+  "author": "Carlos diaz ",
   "license": "ISC",
   "description": "",
   "dependencies": {
