@@ -18,7 +18,6 @@ app.use("/docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec, {
     explorer: true,
 }));
 
-// --- TUS RUTAS API ---
 app.use("/api/v1", cors(corsOptions), routes);
 
 // --- Función de inicialización del servidor ---
@@ -41,10 +40,6 @@ export const init = async () => {
 app.get("/", (_req, res) => {
     res.send("Bienvenido este es el backend de la aplicación de node v1.2.0");
 });
-app.get("/env", async (_req, res) => {
-    try {
-        res.send(env);
-    } catch (error) {
-        console.log(error);
-    }
+app.get("/health", (_req, res) => {
+    res.status(200).json({ status: "OK" });
 });
