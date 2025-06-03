@@ -4,12 +4,14 @@ import { corsOptions } from './utils/cors';
 import routes from '../api/routes';
 import { env } from './config/config';
 import { connectDB } from "../database.config";
+import { swaggerSpec, swaggerUi } from "./swagger";
 
 const app = express();
 app.set("port", env.port);
 app.use(cors(corsOptions));
 app.use(express.json());
 app.use("/api/v1", cors(corsOptions), routes);
+app.use("/docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 export const init = async () => {
   try {
      await connectDB()
