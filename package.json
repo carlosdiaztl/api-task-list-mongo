@@ -6,7 +6,6 @@
     "test": "jest",
     "dev": "nodemon -r dotenv/config -r ./src/index.ts",
     "start": "ts-node -r dotenv/config -r ./src/index.ts",
-    "postinstall": "swagger-ui-express install",
     "docker": "docker-test.bat"
   },
   "keywords": [],
